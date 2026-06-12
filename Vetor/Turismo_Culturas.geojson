@@ -1,0 +1,23 @@
+{
+"type": "FeatureCollection",
+"name": "Turismo_Culturas",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "id": 16, "Nome": "Rodoviária de São José do Calçado", "Endereço": "NULLPraça Coronel Alfredo Lobo - São José do Calçado" }, "geometry": { "type": "Point", "coordinates": [ -41.652296676747596, -21.028603193339563 ] } },
+{ "type": "Feature", "properties": { "id": 1, "Nome": "Igreja Matriz de São José", "Endereço": "São José do Calçado, ES, 29470-000" }, "geometry": { "type": "Point", "coordinates": [ -41.654712669313781, -21.025190313651969 ] } },
+{ "type": "Feature", "properties": { "id": 2, "Nome": "Praça Pedro Vieira", "Endereço": "São José do Calçado, ES, 29470-000" }, "geometry": { "type": "Point", "coordinates": [ -41.654186948877935, -21.025673599254443 ] } },
+{ "type": "Feature", "properties": { "id": 3, "Nome": "Praça Gov. Bley", "Endereço": "São José do Calçado, ES, 29470-000" }, "geometry": { "type": "Point", "coordinates": [ -41.65340661944176, -21.026557658283348 ] } },
+{ "type": "Feature", "properties": { "id": 4, "Nome": "Igreja Presbiteriana de São José do Calçado", "Endereço": "R. José Borges de Almeida, 262 - São José do Calçado, ES, 29470-000" }, "geometry": { "type": "Point", "coordinates": [ -41.652430618273847, -21.02712581355259 ] } },
+{ "type": "Feature", "properties": { "id": 5, "Nome": "Praça Theófilo Lobo", "Endereço": "Rua Domingos Martins, São José do Calçado - ES, 29470-000" }, "geometry": { "type": "Point", "coordinates": [ -41.655088689087428, -21.027320306538947 ] } },
+{ "type": "Feature", "properties": { "id": 6, "Nome": "Campo do Americano", "Endereço": "São José do Calçado, ES, 29470-000" }, "geometry": { "type": "Point", "coordinates": [ -41.656064690255342, -21.026040189065096 ] } },
+{ "type": "Feature", "properties": { "id": 7, "Nome": "Campo do Motorista", "Endereço": "Rua Sebastião José de Almeida, s/n - São José do Calçado, ES, 29470-000" }, "geometry": { "type": "Point", "coordinates": [ -41.658273659082241, -21.028296307706857 ] } },
+{ "type": "Feature", "properties": { "id": 8, "Nome": "Parque de Exposição da Divinéia", "Endereço": "Rua Domingos Martins, São José do Calçado - ES, 29470-000" }, "geometry": { "type": "Point", "coordinates": [ -41.656512613496645, -21.03059014620051 ] } },
+{ "type": "Feature", "properties": { "id": 9, "Nome": "Clube Campestre", "Endereço": "R. Antonio Jorge Habib, 660 - A Definir, São José do Calçado - ES, 29470-000" }, "geometry": { "type": "Point", "coordinates": [ -41.661640941694522, -21.035394712336256 ] } },
+{ "type": "Feature", "properties": { "id": 10, "Nome": "Acqua Show Clube", "Endereço": "Av. Cap. CecÍlio Pimentel - São José do Calçado, ES, 29470-000" }, "geometry": { "type": "Point", "coordinates": [ -41.652508022553285, -21.035467008719053 ] } },
+{ "type": "Feature", "properties": { "id": 11, "Nome": "Cerimonial Valadão", "Endereço": "Polo industrial - Cerimonial Valadão, S/N - Parque, São José do Calçado - ES, 29470-000" }, "geometry": { "type": "Point", "coordinates": [ -41.647428415830767, -21.034019509402395 ] } },
+{ "type": "Feature", "properties": { "id": 12, "Nome": "Usina São José", "Endereço": "São José do Calçado, ES, 29470-000" }, "geometry": { "type": "Point", "coordinates": [ -41.667278487893078, -21.069416447089409 ] } },
+{ "type": "Feature", "properties": { "id": 13, "Nome": "Fazenda Memória", "Endereço": "Estr. do Recreio x Palmeira - São José do Calçado, ES, 29470-000" }, "geometry": { "type": "Point", "coordinates": [ -41.633213532476283, -21.033705177303244 ] } },
+{ "type": "Feature", "properties": { "id": 14, "Nome": "Pedra do Pontão", "Endereço": "Alto Calçado, São José do Calçado - ES, 29470-000" }, "geometry": { "type": "Point", "coordinates": [ -41.577005059418632, -20.950023685863414 ] } },
+{ "type": "Feature", "properties": { "id": 15, "Nome": "Pedra do Jaspe", "Endereço": "São José do Calçado, ES, 29470-000" }, "geometry": { "type": "Point", "coordinates": [ -41.690592499688158, -21.004616099016214 ] } }
+]
+}

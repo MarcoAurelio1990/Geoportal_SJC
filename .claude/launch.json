@@ -1,0 +1,15 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Geoportal SJC",
+      "runtimeExecutable": "powershell",
+      "runtimeArgs": [
+        "-NoProfile",
+        "-Command",
+        "$p=$env:PORT; if(!$p){$p=9500}; $l=New-Object System.Net.HttpListener; $l.Prefixes.Add(\"http://localhost:$p/\"); $l.Start(); $root='E:\\Acelerador_3M\\WebGIS\\Geoportal_SJC'; $mimes=@{\".html\"=\"text/html; charset=utf-8\";\".css\"=\"text/css\";\".js\"=\"application/javascript\";\".json\"=\"application/json\";\".geojson\"=\"application/json\"}; while($l.IsListening){ $ctx=$l.GetContext(); $req=$ctx.Request; $res=$ctx.Response; $path=$req.Url.LocalPath -replace '/','\\\\'; if($path -eq '\\\\'){$path='\\\\index.html'}; $file=Join-Path $root $path.TrimStart('\\\\'); if(Test-Path $file -PathType Leaf){ $ext=[System.IO.Path]::GetExtension($file).ToLower(); $mime=if($mimes[$ext]){$mimes[$ext]}else{'application/octet-stream'}; $bytes=[System.IO.File]::ReadAllBytes($file); $res.ContentType=$mime; $res.ContentLength64=$bytes.Length; $res.Headers.Add('Access-Control-Allow-Origin','*'); $res.OutputStream.Write($bytes,0,$bytes.Length) }else{ $res.StatusCode=404 }; $res.Close() }"
+      ],
+      "autoPort": true
+    }
+  ]
+}

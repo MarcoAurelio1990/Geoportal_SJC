@@ -1,0 +1,19 @@
+# Tabela de cores para Declividade_SJC
+# Classificação DISCRETA conforme Declividade_SJC.qml
+# Formato: valor  R    G    B   Alpha
+# Classes: Plano | Suave Ondulado | Ondulado | Forte Ondulado | Montanhoso | Escarpado
+
+-9999      0    0    0    0
+0         26  152   80  255
+3         26  152   80  255
+3.001    145  207   96  255
+8        145  207   96  255
+8.001    217  239  139  255
+20       217  239  139  255
+20.001   254  224  139  255
+35       254  224  139  255
+35.001   252  141   89  255
+50       252  141   89  255
+50.001   215   48   39  255
+63       215   48   39  255
+nv         0    0    0    0

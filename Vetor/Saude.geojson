@@ -1,0 +1,16 @@
+{
+"type": "FeatureCollection",
+"name": "Saude",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "id": 1, "Nome": "Hospital Estadual de São José do Calçado", "Endereço": "R. Dr. José Fernandes Medina, S/N - Centro" }, "geometry": { "type": "Point", "coordinates": [ -41.652907486262627, -21.023452581030387 ] } },
+{ "type": "Feature", "properties": { "id": 2, "Nome": "Pronto Socorro Us2", "Endereço": "Rua Romão Batista" }, "geometry": { "type": "Point", "coordinates": [ -41.651815007589065, -21.028307265673082 ] } },
+{ "type": "Feature", "properties": { "id": 3, "Nome": "CAPS", "Endereço": "Rua Romão Batista, 159-179" }, "geometry": { "type": "Point", "coordinates": [ -41.651810816494411, -21.028564319478622 ] } },
+{ "type": "Feature", "properties": { "id": 4, "Nome": "Centro de Especialidades Odontológicas", "Endereço": "Av. Rui Barbosa, 245" }, "geometry": { "type": "Point", "coordinates": [ -41.65597955864515, -21.025151022139553 ] } },
+{ "type": "Feature", "properties": { "id": 5, "Nome": "UNIDADE DE SAÚDE DA FAMÍLIA", "Endereço": "R. Mal. Deodoro da Fonseca" }, "geometry": { "type": "Point", "coordinates": [ -41.657673808659638, -21.025148926592209 ] } },
+{ "type": "Feature", "properties": { "id": 5, "Nome": "Unidade Sanitária Rural Patrimônio do Divino", "Endereço": "Jaca" }, "geometry": { "type": "Point", "coordinates": [ -41.607676144966355, -21.003874930120681 ] } },
+{ "type": "Feature", "properties": { "id": 6, "Nome": "Unidade básica de saúde de Airituba", "Endereço": "Airituba" }, "geometry": { "type": "Point", "coordinates": [ -41.687855452934677, -20.944494977154186 ] } },
+{ "type": "Feature", "properties": { "id": 7, "Nome": "Secretaria Municipal de Saúde", "Endereço": "Rua Manoel Ferreira Marques" }, "geometry": { "type": "Point", "coordinates": [ -41.652793278933252, -21.026749400863807 ] } },
+{ "type": "Feature", "properties": { "id": 9, "Nome": "Base Descentralizada SAMU", "Endereço": "270 Rua Manoel Ferreira Marques" }, "geometry": { "type": "Point", "coordinates": [ -41.651936687127311, -21.024479082023909 ] } }
+]
+}

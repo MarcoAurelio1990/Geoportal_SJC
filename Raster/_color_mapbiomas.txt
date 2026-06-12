@@ -1,0 +1,16 @@
+# Tabela de cores para MapBiomas_2024 — Coleção 9, cores oficiais
+# Renderer: paletted (categórico), -nearest_color_entry obrigatório
+# Formato: valor  R    G    B   Alpha
+
+0     0    0    0    0
+3    31  141   73  255
+9   122   89    0  255
+12  214  188  116  255
+15  237  222  142  255
+21  255  239  195  255
+24  212   39   30  255
+25  219   77   79  255
+31    9   16  119  255
+33   37   50  228  255
+36  224  116    0  255
+nv    0    0    0    0

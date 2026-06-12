@@ -1,0 +1,12 @@
+{
+"type": "FeatureCollection",
+"name": "ADM_PUBLICA",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "id": 1, "Nome": "Prefeitura Municipal de São José do Calçado", "Endereço": "Praça Pedro Vieira, 58" }, "geometry": { "type": "Point", "coordinates": [ -41.653725215397621, -21.025679449324024 ] } },
+{ "type": "Feature", "properties": { "id": 2, "Nome": "Câmara Municipal de São José do Calçado", "Endereço": "Praça Cel. José Dutra Nicácio, 130 - Centro" }, "geometry": { "type": "Point", "coordinates": [ -41.655902721909776, -21.024984658965572 ] } },
+{ "type": "Feature", "properties": { "id": 3, "Nome": "Fórum Desembargador Cassiano Castello", "Endereço": "São José do Calçado" }, "geometry": { "type": "Point", "coordinates": [ -41.651416387919596, -21.040925720326609 ] } },
+{ "type": "Feature", "properties": { "id": 4, "Nome": "MPES - Promotoria de Justiça", "Endereço": "Av. Héber Fonseca" }, "geometry": { "type": "Point", "coordinates": [ -41.65152628773501, -21.040748762996706 ] } },
+{ "type": "Feature", "properties": { "id": 5, "Nome": "Cartório do Registro Civil e Tabelionato de Notas", "Endereço": "Praça Pedro Vieira, 176" }, "geometry": { "type": "Point", "coordinates": [ -41.654394859188159, -21.024949267499597 ] } }
+]
+}
