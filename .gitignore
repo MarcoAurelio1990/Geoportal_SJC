@@ -1,0 +1,37 @@
+# ── Dados-fonte (já embutidos em geodata.js) ─────────────────────────────────
+Vetor/
+
+# ── Backup e desenvolvimento ──────────────────────────────────────────────────
+_backup_orfaos/
+
+# ── Rasters originais e metadados GDAL ───────────────────────────────────────
+Raster/*.tif
+Raster/*.aux.xml
+Raster/_color_*.txt
+
+# ── Scripts de geração de dados ───────────────────────────────────────────────
+gerar_dados.ps1
+gerar_minimapa.ps1
+gerar_distrito_mapbiomas.py
+gerar_distrito_stats.py
+iniciar_servidor.bat
+iniciar_servidor.ps1
+
+# ── Metadados QGIS ────────────────────────────────────────────────────────────
+*.qmd
+*.qml
+
+# ── Imagens antigas / não referenciadas ──────────────────────────────────────
+assets/img/SJC_drone.jpeg
+assets/img/SJC_drone2.jpg
+assets/img/minimapa_es_sjc.png
+assets/img/minimapa_es_certo.png
+assets/img/minimapa_es_certo_2.png
+assets/img/minimapa_es_certo_3.png
+assets/img/Geo_Portal.png
+assets/img/*.pdf
+
+# ── Sistema operacional ───────────────────────────────────────────────────────
+Thumbs.db
+.DS_Store
+desktop.ini

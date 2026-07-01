@@ -26,7 +26,13 @@ $layers = @(
   @{ var="GEODATA_CAR";          file="Vetor\Imoveis_Rurais_CAR.geojson" },
   @{ var="GEODATA_VEG_NATIVA";   file="Vetor\Vegetação_Nativa.geojson" },
   @{ var="GEODATA_RL_AVERBADA";  file="Vetor\Reserva_Legal_Averbada.geojson" },
-  @{ var="GEODATA_RL_PROPOSTA";  file="Vetor\Reserva_Legal_Proposta.geojson" }
+  @{ var="GEODATA_RL_PROPOSTA";  file="Vetor\Reserva_Legal_Proposta.geojson" },
+  @{ var="GEODATA_CURVAS_NIVEL";     file="Vetor\Curvas_Nivel_50m_WGS84.geojson" },
+  @{ var="GEODATA_APP_TOTAL";       file="Vetor\APP_Total_SJC.geojson" },
+  @{ var="GEODATA_APP_RIOS";        file="Vetor\APP_Rios_SJC.geojson" },
+  @{ var="GEODATA_APP_NASCENTES";   file="Vetor\APP_Nascentes_SJC.geojson" },
+  @{ var="GEODATA_APP_LAGOS";       file="Vetor\APP_Lagos_SJC.geojson" },
+  @{ var="GEODATA_APP_DECLIVIDADE"; file="Vetor\APP_Declividade_SJC.geojson" }
 )
 
 $sb = New-Object System.Text.StringBuilder

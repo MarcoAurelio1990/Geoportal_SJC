@@ -8,21 +8,439 @@
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- proj4js — local (offline). Fonte original: cdnjs/proj4js 2.11.0 -->
+  <script src="js/libs/proj4.min.js"></script>
+  <script src="js/libs/html2canvas.min.js"></script>
+  <script src="js/libs/jspdf.umd.min.js"></script>
+
   <!-- Estilos do Geoportal -->
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
+<!-- ── Splash / Modal de boas-vindas ──────────────────────────────────────── -->
+<div id="splash-overlay">
+  <div id="splash-modal" role="dialog" aria-modal="true" aria-labelledby="splash-title">
+
+    <!-- Banner com foto de drone -->
+    <div id="splash-banner">
+      <img src="assets/img/SJC_drone3.jpg" alt="Vista aérea de São José do Calçado" />
+    </div>
+
+    <!-- Corpo do modal -->
+    <div id="splash-body">
+
+      <h2 id="splash-title">Geoportal de São José do Calçado</h2>
+      <p class="splash-subtitle">Planejamento Territorial · Meio Ambiente · Infraestrutura Municipal</p>
+      <p class="splash-desc">Explore dados territoriais, ambientais e de infraestrutura do município em uma plataforma interativa.</p>
+
+      <!-- Cartões de indicadores -->
+      <div class="splash-cards">
+
+        <!-- Área Territorial -->
+        <div class="splash-card">
+          <svg class="splash-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polygon points="3,8 9,3 16,5 21,9 18,18 11,21 4,18"/>
+            <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/>
+          </svg>
+          <span class="splash-card-value">273,5 km²</span>
+          <span class="splash-card-label">Área Territorial</span>
+        </div>
+
+        <!-- Distritos Administrativos -->
+        <div class="splash-card">
+          <svg class="splash-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3"  y="3"  width="7.5" height="7.5" rx="1.2"/>
+            <rect x="13.5" y="3"  width="7.5" height="7.5" rx="1.2"/>
+            <rect x="3"  y="13.5" width="7.5" height="7.5" rx="1.2"/>
+            <rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.2"/>
+          </svg>
+          <span class="splash-card-value">4</span>
+          <span class="splash-card-label">Distritos Administrativos</span>
+          <span class="splash-card-note">incluindo a Sede Municipal</span>
+        </div>
+
+        <!-- Imóveis Rurais (CAR) -->
+        <div class="splash-card">
+          <svg class="splash-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 10.5L12 3l9 7.5"/>
+            <path d="M5 8.8V20a.8.8 0 00.8.8h4.2v-5h4v5h4.2a.8.8 0 00.8-.8V8.8"/>
+            <line x1="10" y1="20.8" x2="10" y2="15.8"/>
+            <line x1="14" y1="20.8" x2="14" y2="15.8"/>
+          </svg>
+          <span class="splash-card-value">678</span>
+          <span class="splash-card-label">Imóveis Rurais (CAR)</span>
+        </div>
+
+        <!-- Base MapBiomas -->
+        <div class="splash-card">
+          <svg class="splash-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polygon points="12,2 22,7.5 12,13 2,7.5"/>
+            <polyline points="2,12 12,17.5 22,12"/>
+            <polyline points="2,16.5 12,22 22,16.5"/>
+          </svg>
+          <span class="splash-card-value">2024</span>
+          <span class="splash-card-label">Base MapBiomas</span>
+        </div>
+
+      </div>
+
+      <!-- Ações -->
+      <div class="splash-actions">
+        <button id="btn-explorar" onclick="closeSplash()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:16px;height:16px;vertical-align:-2px;margin-right:7px;flex-shrink:0;opacity:0.9"><polygon points="1,6 1,22 8,18 16,22 23,18 23,2 16,6 8,2"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>Explorar Geoportal
+        </button>
+        <label class="splash-no-show-label">
+          <input type="checkbox" id="splash-no-show" />
+          Não mostrar novamente
+        </label>
+      </div>
+
+      <!-- Rodapé -->
+      <p class="splash-footer">Versão Beta 1.0 · Julho de 2026</p>
+
+    </div><!-- /#splash-body -->
+  </div><!-- /#splash-modal -->
+</div><!-- /#splash-overlay -->
+
+<!-- ── Modal "Sobre o Geoportal" ──────────────────────────────────────────── -->
+<div id="about-overlay">
+  <div id="about-modal" role="dialog" aria-modal="true" aria-labelledby="about-title">
+
+    <!-- Cabeçalho fixo -->
+    <div class="about-header">
+      <h2 id="about-title">Sobre o Geoportal</h2>
+      <button class="about-close-btn" onclick="closeAbout()" title="Fechar">✕</button>
+    </div>
+
+    <!-- Corpo com scroll -->
+    <div class="about-body">
+
+      <p class="about-intro">O Geoportal de São José do Calçado foi desenvolvido para integrar, visualizar e consultar informações territoriais, ambientais e de infraestrutura do município em uma plataforma WebGIS interativa.</p>
+      <p class="about-intro about-intro--second">A ferramenta tem como objetivo apoiar o planejamento territorial, a gestão ambiental e a consulta de dados geoespaciais por gestores, técnicos, pesquisadores e pela população.</p>
+
+      <!-- A. Objetivo -->
+      <div class="about-section">
+        <h3 class="about-section-title">Objetivo</h3>
+        <p class="about-section-text">Disponibilizar uma base cartográfica municipal integrada, reunindo informações administrativas, ambientais, rurais, viárias, hidrográficas e de uso e cobertura da terra, contribuindo para o conhecimento, análise e gestão do território municipal.</p>
+      </div>
+
+      <!-- B. Dados disponíveis -->
+      <div class="about-section">
+        <h3 class="about-section-title">Dados Disponíveis</h3>
+        <ul class="about-list">
+          <li>Limite municipal e distritos administrativos;</li>
+          <li>Sistema viário municipal, estadual e federal;</li>
+          <li>Hidrografia;</li>
+          <li>Serviços públicos;</li>
+          <li>Imóveis Rurais (CAR) — SICAR;</li>
+          <li>Vegetação Nativa — SICAR;</li>
+          <li>Reserva Legal — SICAR;</li>
+          <li>Área de Preservação Permanente (APP) Declarada — SICAR;</li>
+          <li>Relevo, hipsometria, declividade e curvas de nível;</li>
+          <li>Uso e cobertura da terra — MapBiomas 2024.</li>
+        </ul>
+      </div>
+
+      <!-- C. Fontes dos dados -->
+      <div class="about-section">
+        <h3 class="about-section-title">Fontes dos Dados</h3>
+        <p class="about-section-text about-section-text--mb">Os dados utilizados no Geoportal foram obtidos, organizados e processados a partir de bases públicas e municipais, incluindo:</p>
+        <ul class="about-list about-list--sources">
+          <li>
+            <a href="https://www.ibge.gov.br" target="_blank" rel="noopener noreferrer" class="about-source-link">Instituto Brasileiro de Geografia e Estatística (IBGE)</a>
+          </li>
+          <li>
+            <a href="https://www.openstreetmap.org" target="_blank" rel="noopener noreferrer" class="about-source-link">OpenStreetMap (OSM)</a>
+          </li>
+          <li>
+            <a href="https://mapbiomas.org" target="_blank" rel="noopener noreferrer" class="about-source-link">Projeto MapBiomas</a>
+          </li>
+          <li>
+            <a href="https://www.car.gov.br" target="_blank" rel="noopener noreferrer" class="about-source-link">Sistema Nacional de Cadastro Ambiental Rural (SICAR)</a>
+          </li>
+          <li>
+            <a href="https://der.es.gov.br" target="_blank" rel="noopener noreferrer" class="about-source-link">Departamento de Edificações e de Rodovias do Espírito Santo (DER-ES)</a>
+          </li>
+          <li>
+            <a href="https://www.gov.br/dnit" target="_blank" rel="noopener noreferrer" class="about-source-link">Departamento Nacional de Infraestrutura de Transportes (DNIT)</a>
+          </li>
+          <li class="about-list__plain">Bases geoespaciais públicas e dados municipais complementares.</li>
+        </ul>
+      </div>
+
+      <!-- D. Tecnologias -->
+      <div class="about-section">
+        <h3 class="about-section-title">Tecnologias Utilizadas</h3>
+        <div class="about-tags">
+          <span class="about-tag">QGIS</span>
+          <span class="about-tag">Leaflet</span>
+          <span class="about-tag">JavaScript</span>
+          <span class="about-tag">HTML e CSS</span>
+          <span class="about-tag">GeoJSON</span>
+          <span class="about-tag">GDAL</span>
+          <span class="about-tag">jsPDF</span>
+          <span class="about-tag">html2canvas</span>
+          <span class="about-tag">proj4js</span>
+        </div>
+      </div>
+
+      <!-- E. Desenvolvimento -->
+      <div class="about-section">
+        <h3 class="about-section-title">Desenvolvimento</h3>
+        <p class="about-section-text">Desenvolvimento, organização dos dados, processamento geoespacial e estruturação da plataforma:</p>
+        <div class="about-author-block">
+          <img src="assets/img/Marco_Bortolini.png" class="about-author-photo" alt="Marco Bortolini" />
+          <p class="about-author">Marco Bortolini</p>
+        </div>
+        <p class="about-contact-label">Contato e redes:</p>
+        <a class="about-link" href="https://linktr.ee/marcosabortolini" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+          linktr.ee/marcosabortolini
+        </a>
+      </div>
+
+      <!-- F. Versão -->
+      <div class="about-section about-section--last">
+        <h3 class="about-section-title">Versão</h3>
+        <p class="about-section-text">Versão Beta 1.0 · Julho de 2026</p>
+        <p class="about-dev-note">Desenvolvimento independente.</p>
+      </div>
+
+    </div><!-- /.about-body -->
+
+    <!-- Rodapé com botão fechar -->
+    <div class="about-footer">
+      <button class="about-btn-fechar" onclick="closeAbout()">Fechar</button>
+    </div>
+
+  </div><!-- /#about-modal -->
+</div><!-- /#about-overlay -->
+
 <div id="app">
 
   <!-- ── Cabeçalho ─────────────────────────────────────────────────────────── -->
   <header id="header">
-    <div class="header-logo">🗺</div>
-    <div>
-      <div class="header-title">Geoportal de São José do Calçado</div>
-      <div class="header-subtitle">Espírito Santo · Dados Vetoriais</div>
+    <img src="assets/img/Geo_Portal_2.jpg" class="header-logo-icon" alt="Ícone Geoportal" />
+    <div class="header-titles">
+      <div class="header-eyebrow">Geoportal</div>
+      <div class="header-title">São José do Calçado</div>
+      <div class="header-subtitle">Espírito Santo · Brasil</div>
     </div>
+
+    <!-- Busca global -->
+    <div id="search-box">
+      <div id="search-input-wrap">
+        <svg id="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <input type="text" id="search-input" placeholder="Pesquisar no Geoportal..." autocomplete="off" spellcheck="false" />
+        <span id="search-shortcut-hint">Ctrl K</span>
+        <button class="search-clear-btn" title="Limpar busca">✕</button>
+      </div>
+      <div id="search-results"></div>
+    </div>
+
+    <!-- Toolbar direita -->
+    <div id="header-toolbar">
+
+      <!-- Visão inicial -->
+      <button class="toolbar-btn" id="btn-home" title="Visão inicial" aria-label="Visão inicial">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V20a.5.5 0 00.5.5h4v-5h5v5h4a.5.5 0 00.5-.5V9.5"/></svg>
+        <span class="toolbar-btn-label">Início</span>
+      </button>
+
+      <!-- Mapas base -->
+      <div class="toolbar-btn-wrap" id="basemap-widget">
+        <button class="toolbar-btn" id="basemap-btn" title="Mapas base" aria-label="Mapas base">
+          <svg id="basemap-icon" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="38" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M48 140 l128 -72 160 56 128 -56 0 244 -128 56 -160 -56 -128 56 z"/>
+            <path d="M176 68 l0 212"/><path d="M336 124 l0 100"/>
+            <path d="M364 62 c-42,0 -70,32 -70,70 0,52 70,108 70,108 0,0 70,-56 70,-108 0,-38 -28,-70 -70,-70 z" stroke-width="32"/>
+            <circle cx="364" cy="132" r="20" stroke-width="28"/>
+          </svg>
+          <span class="toolbar-btn-label" id="basemap-btn-label">Mapa Base</span>
+        </button>
+        <div id="basemap-menu" class="basemap-menu-hidden"></div>
+      </div>
+
+      <!-- Ferramentas -->
+      <div class="toolbar-btn-wrap" id="tools-widget">
+        <button class="toolbar-btn" id="btn-tools" title="Ferramentas" aria-label="Ferramentas">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3-3a6 6 0 01-7.4 7.4L5.1 21.9a2.8 2.8 0 01-4-4L9.4 9.7a6 6 0 017.4-7.4l-3 3z"/></svg>
+          <span class="toolbar-btn-label">Ferramentas</span>
+        </button>
+        <div id="tools-menu" class="tools-menu-hidden">
+          <button class="tools-menu-item" data-tool="coord">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>
+            Ir para coordenada
+          </button>
+          <button class="tools-menu-item" data-tool="dist">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="2" y1="12" x2="22" y2="12"/><polyline points="8,6 2,12 8,18"/><polyline points="16,6 22,12 16,18"/></svg>
+            Medir distância
+          </button>
+          <button class="tools-menu-item" data-tool="area">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18" stroke-dasharray="3 2"/></svg>
+            Medir área
+          </button>
+          <div class="tools-menu-sep"></div>
+          <button class="tools-menu-item" data-tool="pdf">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="13" x2="12" y2="17"/><line x1="10" y1="15" x2="14" y2="15"/></svg>
+            Exportar como PDF
+          </button>
+          <!-- Exportar como imagem: temporariamente ocultado (código mantido em map.js)
+          <button class="tools-menu-item" data-tool="img">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            Exportar como imagem
+          </button>
+          -->
+          <!-- Informações da feição e Limpar seleção: removidos do menu (redundantes)
+               Handlers preservados em js/map.js (tool === 'info' / tool === 'clear')
+          <div class="tools-menu-sep"></div>
+          <button class="tools-menu-item" data-tool="info">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8" stroke-width="2.5"/><line x1="12" y1="12" x2="12" y2="16"/></svg>
+            Informações da feição
+          </button>
+          <button class="tools-menu-item" data-tool="clear">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+            Limpar seleção
+          </button>
+          -->
+        </div>
+      </div>
+
+      <!-- Sobre -->
+      <button class="toolbar-btn" id="btn-sobre" onclick="openAbout()" title="Sobre o Geoportal" aria-label="Sobre o Geoportal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8" stroke-width="2.5"/><line x1="12" y1="12" x2="12" y2="16"/></svg>
+        <span class="toolbar-btn-label">Informações</span>
+      </button>
+
+    </div><!-- /#header-toolbar -->
   </header>
+
+  <!-- Toast toolbar -->
+  <div id="toolbar-toast"></div>
+
+  <!-- ── Modal: Ir para Coordenada ──────────────────────────────────────────── -->
+  <div id="coord-overlay">
+    <div id="coord-modal" role="dialog" aria-modal="true" aria-labelledby="coord-title">
+      <div class="coord-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>
+        <span id="coord-title">Ir para Coordenada</span>
+        <button class="coord-close-btn" id="coord-close" title="Fechar">✕</button>
+      </div>
+      <div class="coord-body">
+        <label class="coord-label" for="coord-input">Coordenada</label>
+        <input type="text" id="coord-input" class="coord-input" placeholder="-20.9123, -41.6547" autocomplete="off" spellcheck="false" />
+        <div class="coord-hints">
+          <span>Geográfica: <code>-20.9123, -41.6547</code></span>
+          <span>UTM Zona 24S: <code>241234 7689123</code></span>
+        </div>
+        <div id="coord-error" class="coord-error" style="display:none"></div>
+      </div>
+      <div class="coord-footer">
+        <button id="coord-go" class="coord-btn-primary">Ir</button>
+        <button id="coord-cancel" class="coord-btn-secondary">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Modal: Exportar como imagem — DESATIVADO na Beta 1.0 ─────────────── -->
+  <!-- Botão "Exportar como imagem" está comentado no menu de Ferramentas.      -->
+  <!-- O modal abaixo é mantido comentado para evitar conflitos de JS/DOM.       -->
+  <!--
+  <div id="export-overlay">
+    <div id="export-modal" role="dialog" aria-modal="true" aria-labelledby="export-title">
+      <div class="export-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <span id="export-title">Exportar Mapa como Imagem</span>
+        <button class="export-close-btn" id="export-close" title="Fechar">✕</button>
+      </div>
+      <div class="export-body">
+        <label class="export-field-label" for="export-titulo">Título do mapa</label>
+        <input type="text" id="export-titulo" class="export-input" placeholder="Geoportal — São José do Calçado" autocomplete="off" />
+        <div class="export-options-grid">
+          <label class="export-toggle-label"><input type="checkbox" id="export-inc-legenda" checked /><span>Incluir legenda</span></label>
+          <label class="export-toggle-label"><input type="checkbox" id="export-inc-minimap" checked /><span>Incluir minimapa</span></label>
+          <label class="export-toggle-label"><input type="checkbox" id="export-inc-escala" checked /><span>Incluir escala</span></label>
+          <label class="export-toggle-label"><input type="checkbox" id="export-inc-norte" checked /><span>Incluir norte</span></label>
+        </div>
+        <div id="export-cors-warn" class="export-cors-warn" style="display:none"></div>
+        <p class="export-cors-note">A exportação pode variar conforme o mapa base e o ambiente de execução.</p>
+      </div>
+      <div class="export-footer">
+        <button id="export-go" class="export-btn-primary">Exportar PNG</button>
+        <button id="export-cancel" class="export-btn-secondary">Cancelar</button>
+      </div>
+    </div>
+  </div>
+  -->
+
+  <!-- ── Modal: Exportar mapa em PDF ──────────────────────────────────────── -->
+  <div id="pdf-export-overlay">
+    <div id="pdf-export-modal" role="dialog" aria-modal="true" aria-labelledby="pdf-export-title">
+      <div class="export-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="13" x2="12" y2="17"/><line x1="10" y1="15" x2="14" y2="15"/></svg>
+        <span id="pdf-export-title">Exportar Mapa em PDF</span>
+        <button class="export-close-btn" id="pdf-export-close" title="Fechar">✕</button>
+      </div>
+      <div class="export-body">
+        <label class="export-field-label" for="pdf-export-titulo">Título do mapa</label>
+        <input type="text" id="pdf-export-titulo" class="export-input" placeholder="Base Cartográfica Municipal" autocomplete="off" />
+
+        <div class="export-options-grid">
+          <label class="export-toggle-label">
+            <input type="checkbox" id="pdf-inc-legenda" checked />
+            <span>Legenda</span>
+          </label>
+          <label class="export-toggle-label">
+            <input type="checkbox" id="pdf-inc-minimap" checked />
+            <span>Minimapa</span>
+          </label>
+          <label class="export-toggle-label">
+            <input type="checkbox" id="pdf-inc-norte" checked />
+            <span>Norte</span>
+          </label>
+          <label class="export-toggle-label">
+            <input type="checkbox" id="pdf-inc-escala" checked />
+            <span>Escala gráfica</span>
+          </label>
+          <label class="export-toggle-label">
+            <input type="checkbox" id="pdf-inc-camadas" checked />
+            <span>Camadas ativas</span>
+          </label>
+          <label class="export-toggle-label">
+            <input type="checkbox" id="pdf-inc-creditos" checked />
+            <span>Créditos e fontes</span>
+          </label>
+          <label class="export-toggle-label" title="Adiciona ao PDF todas as janelas de atributos que estiverem abertas no momento da exportação.">
+            <input type="checkbox" id="pdf-inc-paineis" checked />
+            <span>Painéis de atributos abertos</span>
+          </label>
+        </div>
+
+        <div id="pdf-cors-warn" class="export-cors-warn" style="display:none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:14px;height:14px;flex-shrink:0;vertical-align:-2px"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          O mapa base <strong>Satélite Esri</strong> pode não aparecer corretamente na exportação PDF devido a restrições do provedor. Para exportar com segurança, utilize <strong>Carto Positron</strong>, <strong>OpenStreetMap</strong> ou <strong>Carto Dark Matter</strong>. Você pode continuar mesmo assim.
+        </div>
+
+        <p class="export-cors-note">
+          A exportação pode variar conforme o mapa base e o ambiente de execução. Para melhor resultado, utilize o servidor local ou a versão online do Geoportal.
+        </p>
+      </div>
+      <div class="export-footer">
+        <button id="pdf-export-go" class="export-btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:14px;height:14px;vertical-align:-2px;margin-right:6px"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Gerar PDF
+        </button>
+        <button id="pdf-export-cancel" class="export-btn-secondary">Cancelar</button>
+      </div>
+    </div>
+  </div>
 
   <!-- ── Corpo ─────────────────────────────────────────────────────────────── -->
   <div id="body">
@@ -31,42 +449,51 @@
     <aside id="sidebar">
       <div id="sidebar-header">Camadas</div>
 
-      <!-- Busca global -->
-      <div id="search-box">
-        <div id="search-input-wrap">
-          <svg id="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-          <input type="text" id="search-input" placeholder="Pesquisar no Geoportal..." autocomplete="off" spellcheck="false" />
-          <button class="search-clear-btn" title="Limpar busca">✕</button>
-        </div>
-        <div id="search-results"></div>
-      </div>
-
       <!-- Lista de camadas (preenchida por map.js) -->
       <div id="layer-list"></div>
-
-      <!-- Seletor de mapa base -->
-      <div id="basemap-panel">
-        <div class="basemap-title">Mapa Base</div>
-        <label class="basemap-option">
-          <input type="radio" name="basemap" value="OpenStreetMap" checked />
-          OpenStreetMap
-        </label>
-        <label class="basemap-option">
-          <input type="radio" name="basemap" value="Esri World Imagery" />
-          Esri World Imagery
-        </label>
-      </div>
     </aside>
 
     <!-- Mapa -->
-    <div id="map"></div>
+    <div id="map">
+      <!-- Minimapa de localização -->
+      <div id="minimap-container">
+        <div class="minimap-title">LOCALIZAÇÃO<button class="minimap-toggle" title="Recolher/Expandir">&#9660;</button></div>
+        <img id="minimap-img" src="assets/img/localizaxcao.png" alt="Localização de São José do Calçado no ES" />
+      </div>
+    </div>
 
   </div><!-- /#body -->
 
   <!-- ── Barra de status ────────────────────────────────────────────────────── -->
   <div id="statusbar">
-    <span class="status-label">Coordenadas</span>
-    <span id="coords">Lat: —  Lon: —</span>
+    <span class="sb-item">
+      <i class="sb-icon fa fa-map-marker-alt"></i>
+      <span class="sb-label">Lat</span>
+      <span id="sb-lat">—</span>
+    </span>
+    <span class="sb-sep"></span>
+    <span class="sb-item">
+      <i class="sb-icon fa fa-map-marker-alt"></i>
+      <span class="sb-label">Lon</span>
+      <span id="sb-lon">—</span>
+    </span>
+    <span class="sb-sep"></span>
+    <span class="sb-item sb-ref">
+      <i class="sb-icon fa fa-globe"></i>
+      <span>WGS84</span>
+    </span>
+    <span class="sb-sep"></span>
+    <span class="sb-item">
+      <i class="sb-icon fa fa-search-plus"></i>
+      <span class="sb-label">Zoom</span>
+      <span id="sb-zoom">—</span>
+    </span>
+    <span class="sb-sep"></span>
+    <span class="sb-item">
+      <i class="sb-icon fa fa-ruler-horizontal"></i>
+      <span class="sb-label">Escala</span>
+      <span id="sb-scale">—</span>
+    </span>
   </div>
 
 </div><!-- /#app -->
@@ -83,8 +510,59 @@
 <!-- Estatísticas MapBiomas por imóvel CAR (pré-processado) -->
 <script src="js/geodata_car_mapbiomas.js"></script>
 
+
+<!-- Estatísticas territoriais por distrito (pré-processado) -->
+<script src="js/geodata_distrito_stats.js"></script>
+
+<!-- MapBiomas por distrito (pré-processado) -->
+<script src="js/geodata_distrito_mapbiomas.js"></script>
+
 <!-- Lógica do mapa -->
 <script src="js/map.js"></script>
+
+<!-- Lógica do splash -->
+<script>
+  // ── Modal "Sobre" ────────────────────────────────────────────────────────
+  function openAbout() {
+    document.getElementById('about-overlay').style.display = 'flex';
+  }
+  function closeAbout() {
+    document.getElementById('about-overlay').style.display = 'none';
+  }
+  document.getElementById('about-overlay').addEventListener('click', function (e) {
+    if (e.target === this) closeAbout();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      closeAbout();
+      closeSplash();
+    }
+  });
+
+  // ── Tela inicial (splash) ─────────────────────────────────────────────────
+  var SPLASH_KEY = 'geoportal_sjc_splash_hidden';
+
+  function openSplash() {
+    document.getElementById('splash-overlay').style.display = 'flex';
+  }
+
+  function closeSplash() {
+    if (document.getElementById('splash-no-show').checked) {
+      localStorage.setItem(SPLASH_KEY, '1');
+    }
+    document.getElementById('splash-overlay').style.display = 'none';
+  }
+
+  // Fechar ao clicar no fundo escurecido (fora do modal)
+  document.getElementById('splash-overlay').addEventListener('click', function (e) {
+    if (e.target === this) closeSplash();
+  });
+
+  // Mostrar na abertura apenas se não foi ocultado
+  if (!localStorage.getItem(SPLASH_KEY)) {
+    openSplash();
+  }
+</script>
 
 </body>
 </html>

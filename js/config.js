@@ -39,13 +39,13 @@ const LAYER_CONFIG = [
     arquivo: 'Vetor/Distritos.geojson',
     tipo: 'polygon',
     estilo: {
-      color: '#F57C00',
+      color: '#7E57C2',
       weight: 2,
       opacity: 1,
       fill: true,
-      fillColor: '#F57C00',
-      fillOpacity: 0.12,
-      dashArray: '8 5'
+      fillColor: '#7E57C2',
+      fillOpacity: 0.10,
+      dashArray: '8,4'
     },
     popupCampos: [
       { campo: 'NM_DIST', rotulo: 'Distrito' },
@@ -86,7 +86,7 @@ const LAYER_CONFIG = [
     arquivo: 'Vetor/DER_RODOVIA_SJCA.geojson',
     tipo: 'line',
     estilo: {
-      color: '#FF9800',
+      color: '#E67E22',
       weight: 3,
       opacity: 1
     },
@@ -337,6 +337,133 @@ const LAYER_CONFIG = [
     visivel: false
   },
 
+  // ── Meio Rural e Ambiental › APP Declarada (SICAR) ──────────────────────────
+  {
+    id: 'app_total',
+    varName: 'GEODATA_APP_TOTAL',
+    label: 'APP Total',
+    grupo: 'Meio Rural e Ambiental',
+    subgrupo: 'APP Declarada (SICAR)',
+    arquivo: 'Vetor/APP_Total_SJC.geojson',
+    tipo: 'polygon',
+    estilo: {
+      color: '#0D47A1',
+      weight: 1.5,
+      opacity: 1,
+      fill: true,
+      fillColor: '#64B5F6',
+      fillOpacity: 0.18
+    },
+    popupCampos: [
+      { campo: 'nom_tema',   rotulo: 'Tipo de APP' },
+      { campo: 'num_area',   rotulo: 'Área (ha)' },
+      { campo: 'des_condic', rotulo: 'Situação ambiental' },
+      { campo: 'ind_status', rotulo: 'Status do cadastro' },
+      { campo: 'cod_imovel', rotulo: 'Código do imóvel (CAR)' }
+    ],
+    visivel: false
+  },
+  {
+    id: 'app_rios',
+    varName: 'GEODATA_APP_RIOS',
+    label: 'APP de Rios',
+    grupo: 'Meio Rural e Ambiental',
+    subgrupo: 'APP Declarada (SICAR)',
+    arquivo: 'Vetor/APP_Rios_SJC.geojson',
+    tipo: 'polygon',
+    estilo: {
+      color: '#0288D1',
+      weight: 1.5,
+      opacity: 1,
+      fill: true,
+      fillColor: '#4FC3F7',
+      fillOpacity: 0.22
+    },
+    popupCampos: [
+      { campo: 'nom_tema',   rotulo: 'Tipo de APP' },
+      { campo: 'num_area',   rotulo: 'Área (ha)' },
+      { campo: 'des_condic', rotulo: 'Situação ambiental' },
+      { campo: 'ind_status', rotulo: 'Status do cadastro' },
+      { campo: 'cod_imovel', rotulo: 'Código do imóvel (CAR)' }
+    ],
+    visivel: false
+  },
+  {
+    id: 'app_nascentes',
+    varName: 'GEODATA_APP_NASCENTES',
+    label: 'APP de Nascentes',
+    grupo: 'Meio Rural e Ambiental',
+    subgrupo: 'APP Declarada (SICAR)',
+    arquivo: 'Vetor/APP_Nascentes_SJC.geojson',
+    tipo: 'polygon',
+    estilo: {
+      color: '#00796B',
+      weight: 1.5,
+      opacity: 1,
+      fill: true,
+      fillColor: '#4DB6AC',
+      fillOpacity: 0.25
+    },
+    popupCampos: [
+      { campo: 'nom_tema',   rotulo: 'Tipo de APP' },
+      { campo: 'num_area',   rotulo: 'Área (ha)' },
+      { campo: 'des_condic', rotulo: 'Situação ambiental' },
+      { campo: 'ind_status', rotulo: 'Status do cadastro' },
+      { campo: 'cod_imovel', rotulo: 'Código do imóvel (CAR)' }
+    ],
+    visivel: false
+  },
+  {
+    id: 'app_lagos',
+    varName: 'GEODATA_APP_LAGOS',
+    label: 'APP de Lagos',
+    grupo: 'Meio Rural e Ambiental',
+    subgrupo: 'APP Declarada (SICAR)',
+    arquivo: 'Vetor/APP_Lagos_SJC.geojson',
+    tipo: 'polygon',
+    estilo: {
+      color: '#01579B',
+      weight: 1.5,
+      opacity: 1,
+      fill: true,
+      fillColor: '#81D4FA',
+      fillOpacity: 0.25
+    },
+    popupCampos: [
+      { campo: 'nom_tema',   rotulo: 'Tipo de APP' },
+      { campo: 'num_area',   rotulo: 'Área (ha)' },
+      { campo: 'des_condic', rotulo: 'Situação ambiental' },
+      { campo: 'ind_status', rotulo: 'Status do cadastro' },
+      { campo: 'cod_imovel', rotulo: 'Código do imóvel (CAR)' }
+    ],
+    visivel: false
+  },
+  {
+    id: 'app_declividade',
+    varName: 'GEODATA_APP_DECLIVIDADE',
+    label: 'APP por Declividade',
+    grupo: 'Meio Rural e Ambiental',
+    subgrupo: 'APP Declarada (SICAR)',
+    arquivo: 'Vetor/APP_Declividade_SJC.geojson',
+    tipo: 'polygon',
+    estilo: {
+      color: '#5D4037',
+      weight: 1.5,
+      opacity: 1,
+      fill: true,
+      fillColor: '#A1887F',
+      fillOpacity: 0.22
+    },
+    popupCampos: [
+      { campo: 'nom_tema',   rotulo: 'Tipo de APP' },
+      { campo: 'num_area',   rotulo: 'Área (ha)' },
+      { campo: 'des_condic', rotulo: 'Situação ambiental' },
+      { campo: 'ind_status', rotulo: 'Status do cadastro' },
+      { campo: 'cod_imovel', rotulo: 'Código do imóvel (CAR)' }
+    ],
+    visivel: false
+  },
+
   // ── Relevo › Declividade (6 classes individuais) ─────────────────────────────
   // PNG único Declividade_SJC.png mantido como backup — não referenciado aqui.
   {
@@ -419,6 +546,26 @@ const LAYER_CONFIG = [
       { cor: '#fee08b', label: '600 – 800 m' },
       { cor: '#fc8d59', label: '800 – 1000 m' },
       { cor: '#d73027', label: '> 1000 m'    }
+    ],
+    visivel: false
+  },
+
+  // ── Relevo › Curvas de Nível ─────────────────────────────────────────────────
+  {
+    id:        'curvas_nivel',
+    varName:   'GEODATA_CURVAS_NIVEL',
+    label:     'Curvas de Nível',
+    grupo:     'Relevo',
+    arquivo:   'Vetor/Curvas_Nivel_50m_WGS84.geojson',
+    tipo:      'line',
+    estilo: {
+      color:   '#D4AF37',
+      weight:  1.0,
+      opacity: 0.9,
+      fill:    false
+    },
+    popupCampos: [
+      { campo: 'ELEV', rotulo: 'Altitude (m)' }
     ],
     visivel: false
   },
