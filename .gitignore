@@ -31,6 +31,9 @@ assets/img/minimapa_es_certo_3.png
 assets/img/Geo_Portal.png
 assets/img/*.pdf
 
+# ── Claude Code (dados internos de sessão) ───────────────────────────────────
+.claude/
+
 # ── Sistema operacional ───────────────────────────────────────────────────────
 Thumbs.db
 .DS_Store
