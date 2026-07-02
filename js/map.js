@@ -496,14 +496,83 @@ function limpaValor(v) {
   return s;
 }
 
-function buildPopup(props, campos, skipEmpty) {
+// ─── KML Export ──────────────────────────────────────────────────────────────
+var _kmlReg = {};
+var _kmlSeq = 0;
+
+function _kmlEsc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function _kmlCoordsArr(coords) {
+  return coords.map(function(c){ return c[0]+','+c[1]+',0'; }).join(' ');
+}
+function _kmlGeom(geom) {
+  if (!geom) return '';
+  var t = geom.type, c = geom.coordinates;
+  if (t === 'Point')
+    return '<Point><coordinates>'+c[0]+','+c[1]+',0</coordinates></Point>';
+  if (t === 'LineString')
+    return '<LineString><coordinates>'+_kmlCoordsArr(c)+'</coordinates></LineString>';
+  if (t === 'Polygon') {
+    var s = '<Polygon><outerBoundaryIs><LinearRing><coordinates>'+_kmlCoordsArr(c[0])+'</coordinates></LinearRing></outerBoundaryIs>';
+    for (var ii=1;ii<c.length;ii++) s += '<innerBoundaryIs><LinearRing><coordinates>'+_kmlCoordsArr(c[ii])+'</coordinates></LinearRing></innerBoundaryIs>';
+    return s+'</Polygon>';
+  }
+  if (t === 'MultiPolygon')
+    return '<MultiGeometry>'+c.map(function(poly){ return '<Polygon><outerBoundaryIs><LinearRing><coordinates>'+_kmlCoordsArr(poly[0])+'</coordinates></LinearRing></outerBoundaryIs></Polygon>'; }).join('')+'</MultiGeometry>';
+  if (t === 'MultiLineString')
+    return '<MultiGeometry>'+c.map(function(l){ return '<LineString><coordinates>'+_kmlCoordsArr(l)+'</coordinates></LineString>'; }).join('')+'</MultiGeometry>';
+  return '';
+}
+function _kmlPlacemark(feature, name) {
+  var p = feature.properties || {};
+  var n = name || p.nome || p.NM_DIST || p.cod_imovel || p.NOME || p.name || 'Feição';
+  var ext = '<ExtendedData>';
+  Object.keys(p).forEach(function(k){ if(p[k]!=null) ext += '<Data name="'+_kmlEsc(k)+'"><value>'+_kmlEsc(p[k])+'</value></Data>'; });
+  ext += '</ExtendedData>';
+  return '<Placemark><name>'+_kmlEsc(n)+'</name>'+ext+_kmlGeom(feature.geometry)+'</Placemark>';
+}
+function _wrapKML(content, docName) {
+  return '<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2">\n<Document>\n<name>'+_kmlEsc(docName||'Geoportal SJC')+'</name>\n'+content+'\n</Document>\n</kml>';
+}
+function _triggerKML(kml, filename) {
+  var blob = new Blob([kml], {type:'application/vnd.google-earth.kml+xml'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (filename||'export').replace(/[^\w\-]/g,'_')+'.kml';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(a.href); }, 800);
+}
+function downloadFeatureKML(regId) {
+  var feature = _kmlReg[regId];
+  if (!feature) return;
+  _triggerKML(_wrapKML(_kmlPlacemark(feature), 'Feição'), 'feicao_sjc');
+}
+function downloadLayerKML(layerId, layerName) {
+  var lyr = layerRefs[layerId];
+  if (!lyr || typeof lyr.toGeoJSON !== 'function') return;
+  var gj = lyr.toGeoJSON();
+  var feats = gj.type === 'FeatureCollection' ? gj.features : [gj];
+  var content = feats.map(function(f){ return _kmlPlacemark(f); }).join('\n');
+  _triggerKML(_wrapKML(content, layerName||layerId), layerName||layerId);
+}
+function _kmlPopupBtn(feature) {
+  var id = 'k'+(++_kmlSeq);
+  _kmlReg[id] = feature;
+  return '<div class="popup-kml-footer"><button onclick="downloadFeatureKML(\''+id+'\')"><i class="fa fa-download"></i> Baixar KML</button></div>';
+}
+
+function buildPopup(props, campos, skipEmpty, feature) {
   let html = '<table class="popup-table">';
   campos.forEach(function (c) {
     const val = limpaValor(props[c.campo]);
     if (skipEmpty && val === '—') return;
     html += '<tr><th>' + c.rotulo + '</th><td>' + val + '</td></tr>';
   });
-  return html + '</table>';
+  html += '</table>';
+  if (feature) html += _kmlPopupBtn(feature);
+  return html;
 }
 
 function buildStyle(cfg) {
@@ -728,9 +797,20 @@ function buildLayerItem(cfg, grupo, groupEl) {
   nameEl.className = 'layer-name';
   nameEl.textContent = cfg.label;
 
+  const dlBtn = document.createElement('button');
+  dlBtn.className = 'layer-kml-btn';
+  dlBtn.title = 'Baixar camada em KML';
+  dlBtn.innerHTML = '<i class="fa fa-download"></i>';
+  dlBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    downloadLayerKML(cfg.id, cfg.label);
+  });
+
   item.appendChild(cb);
   item.appendChild(swatch);
   item.appendChild(nameEl);
+  item.appendChild(dlBtn);
   return item;
 }
 
@@ -2754,7 +2834,7 @@ function processarGeojson(cfg, geojson) {
       onEachFeature: function (feature, lyr) {
         lyr.bindPopup(
           '<div class="popup-title">' + cfg.label + '</div>' +
-          buildPopup(feature.properties, cfg.popupCampos, cfg.skipEmpty)
+          buildPopup(feature.properties, cfg.popupCampos, cfg.skipEmpty, feature)
         );
       }
     });
@@ -2771,7 +2851,8 @@ function processarGeojson(cfg, geojson) {
           return '<div class="popup-title">' + cfg.label + '</div>' +
             buildPopup(feature.properties, cfg.popupCampos, cfg.skipEmpty) +
             buildCarMbSection(cod) +
-            buildCarAppSection(cod);
+            buildCarAppSection(cod) +
+            _kmlPopupBtn(feature);
         }, { maxWidth: 340, maxHeight: 420 });
         lyr.on('click', function (e) {
           L.DomEvent.stopPropagation(e.originalEvent);
