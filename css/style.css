@@ -135,6 +135,37 @@ html, body {
   box-shadow: 2px 0 16px rgba(30,58,95,0.10);
   border-right: 1px solid #DDE4EE;
   z-index: 500;
+  transition: width 0.25s ease;
+}
+#sidebar.collapsed {
+  width: 0;
+  border-right: none;
+}
+
+#sidebar-toggle {
+  position: absolute;
+  left: 280px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 600;
+  width: 18px;
+  height: 48px;
+  background: #1E3A5F;
+  color: #fff;
+  border: none;
+  border-radius: 0 6px 6px 0;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 0 8px rgba(30,58,95,0.18);
+  transition: left 0.25s ease;
+}
+#sidebar-toggle:hover {
+  background: #2a5080;
 }
 
 #sidebar-header {

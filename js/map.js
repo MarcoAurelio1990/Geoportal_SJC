@@ -6218,6 +6218,20 @@ document.getElementById('btn-home').addEventListener('click', resetGeoportalToIn
   window.clearFeatureHighlight = removeAllPanels;
   window.removeDraggablePanel  = removeAllPanels;
 
+  // ─── Sidebar toggle ──────────────────────────────────────────────────────────
+  (function () {
+    var sidebar = document.getElementById('sidebar');
+    var toggleBtn = document.getElementById('sidebar-toggle');
+    if (!sidebar || !toggleBtn) return;
+
+    toggleBtn.addEventListener('click', function () {
+      var collapsed = sidebar.classList.toggle('collapsed');
+      toggleBtn.innerHTML = collapsed ? '&#8250;' : '&#8249;';
+      toggleBtn.style.left = collapsed ? '0' : '280px';
+      setTimeout(function () { map.invalidateSize(); }, 260);
+    });
+  })();
+
   // Exposto para a captura de painéis na exportação de PDF
   window.getOpenAttributePanels = function () {
     return openPanels.map(function (record) {
